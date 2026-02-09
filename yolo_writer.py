@@ -49,6 +49,7 @@ class YOLOWriter(Writer):
         train_val_split=0.7,        # Split ratio (0.7 = 70% train, 30% val)
     ):
         """Initialize the YOLO format writer."""
+        super().__init__()
         # Base configuration
         self._output_dir = output_dir
         self._backend = BackendDispatch({"paths": {"out_dir": output_dir}})
@@ -58,7 +59,7 @@ class YOLOWriter(Writer):
         self._min_bbox_area = min_bbox_area
         self._min_mask_area = min_mask_area
         self._max_points = max_points
-        
+        self._version = self.VERSION
         # Class mapping
         self._class_mapping = class_mapping
         if self._class_mapping is None:
@@ -110,9 +111,12 @@ class YOLOWriter(Writer):
 
     @property
     def version(self):
-        """Return the version of this writer."""
-        return self.VERSION
+        return getattr(self, "_version", self.VERSION)
     
+    @version.setter
+    def version(self, v):
+        self._version = v
+        
     def get_metadata(self):
         """Return metadata for this writer."""
         return self.metadata
