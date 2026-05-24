@@ -116,9 +116,13 @@ class YOLOWriter(Writer):
     @version.setter
     def version(self, v):
         self._version = v
+        if hasattr(self, "metadata") and isinstance(self.metadata, dict):
+            self.metadata["version"] = v
         
     def get_metadata(self):
         """Return metadata for this writer."""
+        if hasattr(self, "metadata") and isinstance(self.metadata, dict):
+            self.metadata["version"] = self.version
         return self.metadata
     
     def write(self, data):
